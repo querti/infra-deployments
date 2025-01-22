@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
 - create-database-pvc.yaml
 - create-database-generator-cronjob.yaml
+- create-database-generator-job.yaml
 namespace: mintmaker

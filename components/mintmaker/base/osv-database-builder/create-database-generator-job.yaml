@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-database-generator
+  namespace: mintmaker
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: origin-cli
+          image: "quay.io/lgallovi-test/cronjob-test:3"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - /osv-generator -destination-dir /mnt/database -docker-filename docker.nedb -rpm-filename rpm.nedb -days 1; sleep 1000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 500Mi
+            limits:
+              cpu: 100m
+              memory: 500Mi
+          volumeMounts:
+            - name: osv-db
+              mountPath: /mnt/database
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+      volumes:
+        - name: osv-db
+          persistentVolumeClaim:
+            claimName: osv-offline-db
