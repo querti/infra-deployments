@@ -17,7 +17,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - /osv-generator -destination-dir /tmp/osv-offline -docker-filename docker.nedb -rpm-filename rpm.nedb -days 1; sleep 1000
+                - /osv-generator -destination-dir /mnt/database -docker-filename docker.nedb -rpm-filename rpm.nedb -days 1; sleep 1000
               resources:
                 requests:
                   cpu: 100m
