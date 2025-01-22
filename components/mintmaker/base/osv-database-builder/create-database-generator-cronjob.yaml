@@ -13,7 +13,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: origin-cli
-              image: "quay.io/lgallovi-test/cronjob-test:2"
+              image: "quay.io/lgallovi-test/cronjob-test:3"
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh
