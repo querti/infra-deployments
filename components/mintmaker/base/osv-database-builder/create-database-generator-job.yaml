@@ -31,4 +31,4 @@ spec:
       volumes:
         - name: osv-db
           persistentVolumeClaim:
-            claimName: osv-offline-db
+            claimName: osv-offline-db2

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: osv-offline-db              
+  name: osv-offline-db2             
   namespace: mintmaker        
 spec:
   accessModes:
