@@ -1,8 +1,11 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-database-generator
+  name: database-generator
   namespace: mintmaker
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
@@ -31,4 +34,4 @@ spec:
       volumes:
         - name: osv-db
           persistentVolumeClaim:
-            claimName: osv-offline-db2
+            claimName: osv-offline-db
