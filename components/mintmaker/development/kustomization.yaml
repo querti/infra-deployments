@@ -17,3 +17,12 @@ commonAnnotations:
 
 components:
   - ../components/rh-certs
+
+patches:
+- target:
+    kind: Deployment
+    name: mintmaker-controller-manager
+  patch: |-
+    - op: replace
+      path: /spec/template/metadata/annotations/mintmaker.appstudio.redhat.com~1renovate-image
+      value: "quay.io/lgallovi-test/mintmaker-renovate-image-test:update-test"
