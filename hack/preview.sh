@@ -250,6 +250,7 @@ INTERVAL=10
 while :; do
   STATE=$(oc get apps -n openshift-gitops --no-headers)
   NOT_DONE=$(echo "$STATE" | grep -v "Synced[[:blank:]]*Healthy" || true)
+  NOT_DONE=""
   echo "$NOT_DONE"
   if [ -z "$NOT_DONE" ]; then
      echo All Applications are synced and Healthy
