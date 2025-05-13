@@ -214,3 +214,9 @@ kind: ApplicationSet
 metadata:
   name: postgres
 $patch: delete
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: build-service
+$patch: delete
