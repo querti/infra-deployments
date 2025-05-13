@@ -7,8 +7,8 @@ resources:
 
 images:
   - name: quay.io/konflux-ci/mintmaker
-    newName: quay.io/konflux-ci/mintmaker
-    newTag: 414b18dd9eecfb93f0985eb63f21df21ed328f42
+    newName: quay.io/lgallovi-test/mintmaker-test
+    newTag: redis-full-test
 
 namespace: mintmaker
 
@@ -17,3 +17,13 @@ commonAnnotations:
 
 components:
   - ../components/rh-certs
+
+
+patches:
+- target:
+    kind: Deployment
+    name: mintmaker-controller-manager
+  patch: |-
+    - op: replace
+      path: /spec/template/metadata/annotations/mintmaker.appstudio.redhat.com~1renovate-image
+      value: "quay.io/konflux-ci/mintmaker-renovate-image:63bbd024c8dd55cecf621a4cf2179f4c230b88ca"
