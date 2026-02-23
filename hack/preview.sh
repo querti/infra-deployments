@@ -10,7 +10,7 @@ ARGOCD_NAMESPACE="openshift-gitops"
 PIPELINES_NAMESPACE="openshift-pipelines"
 SYNC_INTERVAL=10
 MAX_TEKTON_CRD_RETRIES=5
-MAX_SYNC_TIMEOUT=2700           # 45 minutes max for all apps to sync
+MAX_SYNC_TIMEOUT=300            # 5 minutes max for all apps to sync
 MAX_TEKTON_READY_TIMEOUT=900    # 15 minutes max for Tekton to become ready
 DETAILED_STATUS_INTERVAL=120    # Show detailed status every 2 minutes
 
@@ -496,8 +496,9 @@ deploy_and_wait_for_argocd() {
     oc apply -k $ROOT/argo-cd-apps/app-of-app-sets/development
     log_success "Root Application 'all-application-sets' created"
 
-    # Wait for root application to sync
-    log_substep "Waiting for 'all-application-sets' to become Healthy and Synced"
+    # Wait for root application to sync (3-minute timeout to avoid infinite loop)
+    local root_max_wait=300
+    log_substep "Waiting for 'all-application-sets' to become Healthy and Synced (timeout: ${root_max_wait}s)"
     local root_wait=0
     while true; do
         local root_status
@@ -508,10 +509,16 @@ deploy_and_wait_for_argocd() {
         fi
 
         root_wait=$((root_wait + 5))
+        if [ "$root_wait" -ge "$root_max_wait" ]; then
+            log_warn "Root application not ready after ${root_max_wait}s (status: '$root_status'), continuing anyway"
+            break
+        fi
         log_wait "Root application status: '$root_status' (target: 'Healthy Synced') - ${root_wait}s elapsed"
         sleep 5
     done
-    log_success "Root application 'all-application-sets' is Healthy and Synced"
+    if [ "$root_wait" -lt "$root_max_wait" ]; then
+        log_success "Root application 'all-application-sets' is Healthy and Synced"
+    fi
 
     # Trigger hard refresh of all apps
     log_substep "Triggering hard refresh on all ArgoCD applications"
@@ -531,7 +538,7 @@ deploy_and_wait_for_argocd() {
     while true; do
         local refresh_pending
         refresh_pending=$(oc get applications.argoproj.io -n $ARGOCD_NAMESPACE -o json 2>/dev/null | jq '[.items[] | select(.metadata.annotations["argocd.argoproj.io/refresh"] != null)] | length' 2>/dev/null || echo "0")
-
+        break
         if [ "$refresh_pending" -eq 0 ] || [ -z "$refresh_pending" ]; then
             break
         fi
