@@ -1,0 +1,35 @@
+apiVersion: quay.redhat.com/v1
+kind: QuayRegistry
+metadata:
+  name: test-registry
+  namespace: quay-registry
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  configBundleSecret: quay-config-bundle
+  components:
+    - kind: quay
+      managed: true
+      overrides:
+        replicas: 1
+    - kind: postgres
+      managed: true
+    - kind: redis
+      managed: true
+    - kind: objectstorage
+      managed: false
+    - kind: tls
+      managed: true
+    - kind: route
+      managed: true
+    - kind: clair
+      managed: false
+    - kind: clairpostgres
+      managed: false
+    - kind: horizontalpodautoscaler
+      managed: false
+    - kind: mirror
+      managed: false
+    - kind: monitoring
+      managed: false

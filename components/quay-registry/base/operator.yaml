@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: quay-registry
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: quay-registry
+  namespace: quay-registry
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  targetNamespaces:
+    - quay-registry
+  upgradeStrategy: Default
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: quay-operator
+  namespace: quay-registry
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  channel: stable-3.14
+  installPlanApproval: Automatic
+  name: quay-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace

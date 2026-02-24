@@ -38,6 +38,7 @@ resources:
   - cert-manager
   - trust-manager
   - squid
+  - quay-registry
   - kueue
   - policies
   - konflux-kite
