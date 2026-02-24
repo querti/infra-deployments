@@ -8,21 +8,11 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   configBundleSecret: quay-config-bundle
-  # TODO: Remove resource overrides before deploying to staging.
-  # These are only needed for local CRC testing where resources are limited.
-  # The staging cluster has sufficient resources to use operator defaults.
   components:
     - kind: quay
       managed: true
       overrides:
         replicas: 1
-        resources:
-          requests:
-            cpu: 500m
-            memory: 1Gi
-          limits:
-            cpu: "2"
-            memory: 4Gi
     - kind: postgres
       managed: true
       overrides:
