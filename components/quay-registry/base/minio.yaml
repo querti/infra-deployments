@@ -126,6 +126,8 @@ spec:
               mc alias set local http://minio.quay-registry.svc.cluster.local:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
               mc mb --ignore-existing local/quay
           env:
+            - name: MC_CONFIG_DIR
+              value: /tmp/.mc
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
